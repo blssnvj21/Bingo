@@ -89,7 +89,7 @@ function render(){
 }
 function drawNext(){
  if(over||drawBag.length===0)return;
- const n=drawBag.pop();called.add(n);
+ const n=drawBag.pop();called.add(n);if(called.size===1)$("mode").disabled=true;
  $("current").textContent=LETTERS[Math.floor((n-1)/15)]+" — "+n;
  const p=hasWon(playerCard,called),c=hasWon(cpuCard,called);
  if(p||c){
@@ -107,7 +107,7 @@ function drawNext(){
 function newGame(){
  playerCard=makeCard();cpuCard=makeCard();
  drawBag=shuffled(Array.from({length:75},(_,i)=>i+1));
- called=new Set();over=false;
+ called=new Set();over=false;$("mode").disabled=false;
  $("current").textContent="—";$("headline").textContent="Ready to play!";
  $("message").textContent="Draw a number. The same number is checked on both cards automatically.";
  $("draw").disabled=false;render();

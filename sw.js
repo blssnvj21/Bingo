@@ -1,4 +1,4 @@
-const CACHE_NAME = "bingo-battle-shell-v2";
+const CACHE_NAME = "bingo-battle-shell-v3";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -61,7 +61,7 @@ self.addEventListener("fetch", event => {
       const response = await fetch(request);
       if (response.ok && response.type === "basic") {
         const cache = await caches.open(CACHE_NAME);
-        event.waitUntil(cache.put(request, response.clone()));
+        await cache.put(request, response.clone());
       }
       return response;
     } catch {

@@ -16,7 +16,7 @@ button,select{font:inherit}button{cursor:pointer}.action,select{border:1px solid
 </head>
 <body>
 <main>
-<header><h1>🎱 Bingo Battle</h1><p>One card. One clever computer. First to make a line wins.</p></header>
+<header><h1>🎱 Bingo Battle</h1><p>One card each. Same rules. First to make a line wins.</p></header>
 <div class="toolbar">
 <label for="difficulty">AI difficulty</label>
 <select id="difficulty" aria-label="AI difficulty"><option value="easy">Easy · casual</option><option value="medium">Medium · thoughtful</option><option value="hard" selected>Hard · strategic</option></select>
@@ -25,9 +25,9 @@ button,select{font:inherit}button{cursor:pointer}.action,select{border:1px solid
 <section class="status" aria-live="polite"><strong id="headline">Your move!</strong><span id="message">Choose any unmarked number on your card. The computer will then make its move.</span></section>
 <div class="boards">
 <section class="panel player"><h2>🧑 Your card <span class="tag">YOU</span></h2><p class="sub">Tap a number to mark it on your turn.</p><div class="board" id="playerBoard"></div><div class="stats"><span id="playerCount">0 marks</span><span id="playerLines">Lines: 0/12</span></div><div class="progress"><span id="playerProgress"></span></div></section>
-<section class="panel"><h2>🤖 Computer card <span class="tag">AI</span></h2><p class="sub" id="cpuHint">The AI scores possible moves before choosing.</p><div class="board" id="cpuBoard"></div><div class="stats"><span id="cpuCount">0 marks</span><span id="cpuLines">Lines: 0/12</span></div><div class="progress"><span id="cpuProgress"></span></div></section>
+<section class="panel"><h2>🤖 Computer card <span class="tag">AI</span></h2><p class="sub" id="cpuHint">The AI chooses one legal square on its own visible card.</p><div class="board" id="cpuBoard"></div><div class="stats"><span id="cpuCount">0 marks</span><span id="cpuLines">Lines: 0/12</span></div><div class="progress"><span id="cpuProgress"></span></div></section>
 </div>
-<p class="footer">Static HTML, CSS and JavaScript · No backend · No database · No localStorage</p>
+<p class="footer">⚖️ Fair play: the computer can inspect only its own card and marks one unmarked square per turn. It cannot read your card, change either card, or mark extra squares.<br>Static HTML, CSS and JavaScript · No backend · No database · No localStorage</p>
 </main>
 <script>
 (() => {
@@ -67,7 +67,7 @@ function render(){
  $("playerProgress").style.width=(pl/12*100)+"%";
  $("cpuProgress").style.width=(cl/12*100)+"%";
 }
-function chooseMove(card,marks,difficulty){
+// Fair-play boundary: this function receives ONLY the computer card and its own marks.\n// It never receives or reads playerCard/playerMarks, and returns one legal square.\nfunction chooseMove(card,marks,difficulty){
  const available=card.map((_,i)=>i).filter(i=>card[i]!=="FREE"&&!marks.has(i));
  if(difficulty==="easy")return available[Math.floor(Math.random()*available.length)];
  let best=-Infinity,bestMoves=[];

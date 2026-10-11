@@ -1,0 +1,74 @@
+name: Validate Bingo Battle
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Validate PWA manifest and local references
+        run: |
+          python3 - <<'PY'
+          import json
+          import re
+          from pathlib import Path
+
+          root = Path(".")
+          html = (root / "index.html").read_text(encoding="utf-8")
+          manifest = json.loads((root / "manifest.webmanifest").read_text(encoding="utf-8"))
+          required = ["./", "./index.html", "./manifest.webmanifest", "./favicon.svg", "./logo.svg"]
+          missing = [path for path in required if path not in html and path != "./"]
+          if missing:
+              raise SystemExit(f"Missing expected local references in index.html: {missing}")
+
+          for path in ["favicon.svg", "logo.svg", "manifest.webmanifest", "sw.js", "robots.txt", "sitemap.xml"]:
+              if not (root / path).is_file():
+                  raise SystemExit(f"Required project file is missing: {path}")
+
+          for icon in manifest.get("icons", []):
+              icon_path = icon.get("src", "")
+              if icon_path.startswith("./") and not (root / icon_path[2:]).is_file():
+                  raise SystemExit(f"Manifest icon does not exist: {icon_path}")
+
+          for marker in ['name="description"', 'rel="canonical"', 'application/ld+json', 'beforeinstallprompt']:
+              if marker not in html:
+                  raise SystemExit(f"Expected SEO/PWA feature not found: {marker}")
+
+          if "sitemap.xml" not in (root / "robots.txt").read_text(encoding="utf-8"):
+              raise SystemExit("robots.txt must advertise sitemap.xml")
+
+          print("Manifest JSON, local assets, SEO metadata and PWA references look valid.")
+          PY
+
+      - name: Check JavaScript syntax
+        run: |
+          node --check sw.js
+          python3 - <<'PY'
+          import re
+          from pathlib import Path
+
+          html = Path("index.html").read_text(encoding="utf-8")
+          scripts = re.findall(r"<script(?:\\s+type=\"module\")?>(.*?)</script>", html, re.S)
+          if len(scripts) < 2:
+              raise SystemExit(f"Expected at least two inline scripts, found {len(scripts)}")
+
+          Path("/tmp/bingo-module.mjs").write_text(scripts[0], encoding="utf-8")
+          Path("/tmp/bingo-game.js").write_text(scripts[1], encoding="utf-8")
+          PY
+          node --check /tmp/bingo-module.mjs
+          node --check /tmp/bingo-game.js

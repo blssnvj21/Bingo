@@ -10,7 +10,7 @@
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#20234a 0,#0b1020 55%);color:#f8fafc;font-family:system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh;padding:22px 12px}
 main{max-width:1000px;margin:auto}header{text-align:center}h1{font-size:clamp(2rem,6vw,3.4rem);margin:4px 0;background:linear-gradient(90deg,#c4b5fd,#f0abfc);color:transparent;background-clip:text}header p,.hint{color:var(--muted);line-height:1.5}.toolbar{display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;margin:20px 0}
 button{font:inherit;cursor:pointer}.action{border:1px solid #48536b;background:#202a40;color:white;border-radius:12px;padding:11px 17px}.action.primary{background:var(--purple);border-color:var(--purple);font-weight:750}.action:disabled{opacity:.45;cursor:not-allowed}
-.status{max-width:720px;margin:0 auto 18px;background:#1d2142;border:1px solid #5552a3;padding:16px;border-radius:16px;text-align:center}.status strong{display:block;font-size:1.2rem;margin-bottom:4px}.current{font-size:clamp(2rem,8vw,3.5rem);font-weight:900;color:#fde68a;line-height:1.2;margin:8px}.boards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.panel{min-width:0;background:linear-gradient(145deg,#192238,#121a2b);border:1px solid #303b54;border-radius:18px;padding:15px;box-shadow:0 14px 35px #0002}.panel h2{margin:0 0 5px;font-size:1.15rem}.sub{color:var(--muted);font-size:.9rem;margin:0 0 12px;min-height:22px}.board{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px}.cell{aspect-ratio:1;min-width:0;border-radius:9px;border:1px solid #3a4760;background:var(--tile);color:white;font-weight:800;font-size:clamp(13px,2.4vw,21px);display:grid;place-items:center;padding:0}.head{aspect-ratio:auto;min-height:34px;background:#6d45d5;border:0;font-size:clamp(12px,2vw,17px)}.cell.marked{background:#166534;border-color:#4ade80;color:#dcfce7}.cell.winning{background:#a16207!important;border-color:#fde68a!important;color:#fff7cc}.cell.free{background:#164e63;color:#cffafe}.stats{display:flex;justify-content:space-between;gap:8px;margin-top:12px;color:var(--muted);font-size:.9rem}.history{max-width:800px;margin:18px auto;background:#151d31;border:1px solid #303b54;border-radius:16px;padding:14px}.history h2{font-size:1rem;margin:0 0 10px}.called{display:flex;flex-wrap:wrap;gap:6px;min-height:32px}.pill{background:#263149;border:1px solid #46536e;border-radius:8px;padding:5px 8px;font-weight:700;font-size:.85rem}.footer{text-align:center;color:var(--muted);font-size:.85rem;margin:22px 0 8px}
+.status{max-width:720px;margin:0 auto 18px;background:#1d2142;border:1px solid #5552a3;padding:16px;border-radius:16px;text-align:center}.status strong{display:block;font-size:1.2rem;margin-bottom:4px}.current{font-size:clamp(2rem,8vw,3.5rem);font-weight:900;color:#fde68a;line-height:1.2;margin:8px}.boards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.panel{min-width:0;background:linear-gradient(145deg,#192238,#121a2b);border:1px solid #303b54;border-radius:18px;padding:15px;box-shadow:0 14px 35px #0002}.panel h2{margin:0 0 5px;font-size:1.15rem}.sub{color:var(--muted);font-size:.9rem;margin:0 0 12px;min-height:22px}.board{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px}.cell{aspect-ratio:1;min-width:0;border-radius:9px;border:1px solid #3a4760;background:var(--tile);color:white;font-weight:800;font-size:clamp(13px,2.4vw,21px);display:grid;place-items:center;padding:0}.head{aspect-ratio:auto;min-height:34px;background:#6d45d5;border:0;font-size:clamp(12px,2vw,17px)}.cell.marked{background:#166534;border-color:#4ade80;color:#dcfce7}.cell.winning{background:#a16207!important;border-color:#fde68a!important;color:#fff7cc}.cell.free{background:#164e63;color:#cffafe}.stats{display:flex;justify-content:space-between;gap:8px;margin-top:12px;color:var(--muted);font-size:.9rem}.history{max-width:800px;margin:18px auto;background:#151d31;border:1px solid #303b54;border-radius:16px;padding:14px}.history h2{font-size:1rem;margin:0 0 10px}.called{display:flex;flex-wrap:wrap;gap:6px;min-height:32px}.pill{background:#263149;border:1px solid #46536e;border-radius:8px;padding:5px 8px;font-weight:700;font-size:.85rem}.three-stage{max-width:800px;margin:0 auto 18px;background:linear-gradient(145deg,#151d31,#0f172a);border:1px solid #394563;border-radius:18px;overflow:hidden;position:relative;min-height:220px;box-shadow:0 16px 40px #0003}.three-stage canvas{display:block;width:100%;height:260px}.three-label{position:absolute;left:14px;top:12px;z-index:1;font-size:.85rem;font-weight:800;letter-spacing:.08em;color:#c4b5fd;text-transform:uppercase}.three-fallback{position:absolute;inset:0;display:grid;place-items:center;padding:24px;text-align:center;color:var(--muted);pointer-events:none}.three-stage.ready .three-fallback{display:none}.footer{text-align:center;color:var(--muted);font-size:.85rem;margin:22px 0 8px}
 @media(max-width:650px){body{padding:15px 9px}.boards{grid-template-columns:1fr}.panel{padding:12px}.cell{font-size:clamp(16px,5vw,24px)}.sub{min-height:0}.toolbar{margin:16px 0}.status{padding:13px}}
 </style>
 </head>
@@ -22,6 +22,7 @@ button{font:inherit;cursor:pointer}.action{border:1px solid #48536b;background:#
 <button class="action primary" id="draw">🎱 Draw next number</button>
 <button class="action" id="newGame">↻ New game</button>
 </div>
+<section class="three-stage" id="threeStage" aria-label="Interactive 3D Bingo machine"><span class="three-label">Three.js · 3D Bingo Machine</span><div class="three-fallback" id="threeFallback">Loading the 3D Bingo machine… If the 3D library is blocked, the Bingo game still works normally.</div></section>
 <section class="status" aria-live="polite"><strong id="headline">Ready to play!</strong><div class="current" id="current">—</div><span id="message">Draw a number. The same number is checked on both cards automatically.</span></section>
 <div class="boards">
 <section class="panel"><h2>🧑 Your card</h2><p class="sub">Numbers are marked automatically when called.</p><div class="board" id="playerBoard"></div><div class="stats"><span id="playerMarks">0 numbers called on card</span><span id="playerLines">Lines: 0</span></div></section>
@@ -30,6 +31,89 @@ button{font:inherit;cursor:pointer}.action{border:1px solid #48536b;background:#
 <section class="history"><h2>📜 Called numbers (<span id="drawCount">0</span>/75)</h2><div class="called" id="history"><span class="hint">No numbers drawn yet.</span></div></section>
 <p class="footer">⚖️ Fair play: both cards use the same shuffled 1–75 number draw. A called number is automatically marked on both cards if present. Neither side chooses extra moves, gets hidden information, or changes the draw.<br>Free static HTML, CSS and JavaScript · No AI · No backend · No database · No localStorage</p>
 </main>
+
+<script type="module">
+try {
+ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js";
+ const stage=document.getElementById("threeStage");
+ const scene=new THREE.Scene();
+ scene.background=new THREE.Color("#10172b");
+ scene.fog=new THREE.Fog("#10172b",9,18);
+ const camera=new THREE.PerspectiveCamera(42,1,0.1,100);
+ camera.position.set(0,1.7,7.8);
+ const renderer=new THREE.WebGLRenderer({antialias:true,alpha:false});
+ renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
+ renderer.setSize(stage.clientWidth,260);
+ renderer.outputColorSpace=THREE.SRGBColorSpace;
+ stage.appendChild(renderer.domElement);
+ stage.classList.add("ready");
+ scene.add(new THREE.HemisphereLight(0xcbd5ff,0x1b2440,2.2));
+ const key=new THREE.PointLight(0xa78bfa,45,18);key.position.set(2,4,4);scene.add(key);
+ const rim=new THREE.PointLight(0x22d3ee,24,12);rim.position.set(-3,1,1);scene.add(rim);
+ const floor=new THREE.Mesh(new THREE.CircleGeometry(3.6,64),new THREE.MeshStandardMaterial({color:0x141d33,roughness:.9}));
+ floor.rotation.x=-Math.PI/2;floor.position.y=-1.7;scene.add(floor);
+ const ringMat=new THREE.MeshStandardMaterial({color:0x8b5cf6,metalness:.6,roughness:.3,emissive:0x2e1065});
+ const rings=[];
+ for(let i=0;i<3;i++){const ring=new THREE.Mesh(new THREE.TorusGeometry(1.65-i*.12,.025,8,80),ringMat);ring.rotation.x=Math.PI/2+(i-1)*.28;ring.position.y=-.15+(i-1)*.16;scene.add(ring);rings.push(ring);}
+ const globe=new THREE.Mesh(new THREE.SphereGeometry(1.42,32,24),new THREE.MeshPhysicalMaterial({color:0x6d5bd0,transparent:true,opacity:.13,metalness:.25,roughness:.16,side:THREE.DoubleSide,depthWrite:false}));
+ globe.position.y=.12;scene.add(globe);
+ const wire=new THREE.Mesh(new THREE.SphereGeometry(1.45,18,12),new THREE.MeshBasicMaterial({color:0x9b8afb,wireframe:true,transparent:true,opacity:.42}));
+ wire.position.copy(globe.position);scene.add(wire);
+ function ballTexture(text,color){
+  const canvas=document.createElement("canvas");canvas.width=256;canvas.height=256;
+  const ctx=canvas.getContext("2d");ctx.fillStyle=color;ctx.fillRect(0,0,256,256);
+  const g=ctx.createRadialGradient(75,55,8,128,128,180);g.addColorStop(0,"#ffffff");g.addColorStop(.22,color);g.addColorStop(1,"#111827");
+  ctx.fillStyle=g;ctx.fillRect(0,0,256,256);
+  ctx.beginPath();ctx.arc(128,128,70,0,Math.PI*2);ctx.fillStyle="#ffffff";ctx.fill();
+  ctx.fillStyle="#111827";ctx.font="bold 76px system-ui";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText(String(text),128,132);
+  const tex=new THREE.CanvasTexture(canvas);tex.colorSpace=THREE.SRGBColorSpace;return tex;
+ }
+ const colors=["#60a5fa","#a78bfa","#f472b6","#34d399","#fbbf24"];
+ const balls=[];
+ for(let i=0;i<18;i++){
+  const n=1+((i*7+11)%75),col=colors[i%colors.length];
+  const mat=new THREE.MeshStandardMaterial({map:ballTexture(n,col),roughness:.32,metalness:.05});
+  const mesh=new THREE.Mesh(new THREE.SphereGeometry(.19,20,16),mat);
+  const a=i*2.399,rad=.3+(i%4)*.23;
+  mesh.position.set(Math.cos(a)*rad,-.9+(i%7)*.28,Math.sin(a)*rad);
+  mesh.userData={phase:i*.71,baseY:mesh.position.y};scene.add(mesh);balls.push(mesh);
+ }
+ const drawGroup=new THREE.Group();scene.add(drawGroup);
+ const displayBall=new THREE.Mesh(new THREE.SphereGeometry(.57,32,24),new THREE.MeshStandardMaterial({map:ballTexture("?", "#fbbf24"),roughness:.25}));
+ displayBall.position.set(2.35,.2,.15);drawGroup.add(displayBall);
+ const displayRing=new THREE.Mesh(new THREE.TorusGeometry(.69,.035,10,64),new THREE.MeshStandardMaterial({color:0xfbbf24,emissive:0x6b4300,metalness:.5,roughness:.3}));
+ displayRing.position.copy(displayBall.position);drawGroup.add(displayRing);
+ let targetBallX=2.35,targetBallY=.2,drawFlash=0;
+ function updateBall(n,letter){
+  displayBall.material.map.dispose();
+  displayBall.material.map=ballTexture(n,colors[Math.floor((n-1)/15)]);
+  displayBall.material.needsUpdate=true;
+  targetBallY=.2;drawFlash=1;
+  const fallback=document.getElementById("threeFallback");
+  if(fallback)fallback.textContent="Latest draw: "+letter+" — "+n;
+ }
+ window.addEventListener("bingo-draw",e=>updateBall(e.detail.number,e.detail.letter));
+ window.addEventListener("bingo-new-game",()=>{displayBall.material.map.dispose();displayBall.material.map=ballTexture("?","#fbbf24");displayBall.material.needsUpdate=true;drawFlash=0;});
+ const resize=()=>{const w=Math.max(280,stage.clientWidth);renderer.setSize(w,260,false);camera.aspect=w/260;camera.updateProjectionMatrix();};
+ if("ResizeObserver" in window)new ResizeObserver(resize).observe(stage);else window.addEventListener("resize",resize);
+ const clock=new THREE.Clock();
+ renderer.setAnimationLoop(()=>{
+  const t=clock.getElapsedTime();
+  globe.rotation.y=t*.16;wire.rotation.y=-t*.12;
+  rings.forEach((r,i)=>{r.rotation.z=t*(i%2?-.18:.15);});
+  balls.forEach(b=>{b.position.y=b.userData.baseY+Math.sin(t*2+b.userData.phase)*.07;b.rotation.x=t*.4+b.userData.phase;b.rotation.y=t*.6;});
+  drawGroup.position.y=Math.sin(t*1.4)*.06;
+  displayBall.scale.setScalar(1+drawFlash*.12);displayRing.rotation.z=t*.45;
+  drawFlash=Math.max(0,drawFlash-.035);
+  renderer.render(scene,camera);
+ });
+} catch(error) {
+ const fallback=document.getElementById("threeFallback");
+ if(fallback)fallback.textContent="3D mode could not load (the external Three.js library may be blocked). The Bingo game still works normally.";
+ console.warn("Three.js scene unavailable:",error);
+}
+</script>
+
 <script>
 (() => {
 const $ = id => document.getElementById(id);
@@ -89,7 +173,7 @@ function render(){
 }
 function drawNext(){
  if(over||drawBag.length===0)return;
- const n=drawBag.pop();called.add(n);if(called.size===1)$("mode").disabled=true;
+ const n=drawBag.pop();called.add(n);window.dispatchEvent(new CustomEvent("bingo-draw",{detail:{number:n,letter:LETTERS[Math.floor((n-1)/15)]}}));if(called.size===1)$("mode").disabled=true;
  $("current").textContent=LETTERS[Math.floor((n-1)/15)]+" — "+n;
  const p=hasWon(playerCard,called),c=hasWon(cpuCard,called);
  if(p||c){
@@ -105,6 +189,7 @@ function drawNext(){
  render();
 }
 function newGame(){
+ window.dispatchEvent(new Event("bingo-new-game"));
  playerCard=makeCard();cpuCard=makeCard();
  drawBag=shuffled(Array.from({length:75},(_,i)=>i+1));
  called=new Set();over=false;$("mode").disabled=false;

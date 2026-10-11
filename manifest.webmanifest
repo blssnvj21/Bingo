@@ -1,0 +1,27 @@
+{
+  "id": "./",
+  "name": "Bingo Battle — Classic 3D Bingo",
+  "short_name": "Bingo Battle",
+  "description": "A free classic 75-ball Bingo game with fair shared draws and an interactive 3D machine.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0b1020",
+  "theme_color": "#111827",
+  "categories": ["games", "entertainment"],
+  "icons": [
+    {
+      "src": "./logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "./logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}

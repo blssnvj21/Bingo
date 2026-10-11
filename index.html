@@ -4,26 +4,28 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#111827">
-<title>Bingo Battle — Fair Classic Bingo</title>
+<meta name="description" content="A free, fair classic Bingo game with an interactive Three.js 3D machine.">
+<title>Bingo Battle — 3D Fair Bingo</title>
 <style>
 :root{color-scheme:dark;--bg:#0b1020;--panel:#151d31;--tile:#263149;--muted:#a9b6cc;--purple:#8b5cf6;--green:#22c55e;--gold:#fbbf24}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#20234a 0,#0b1020 55%);color:#f8fafc;font-family:system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh;padding:22px 12px}
 main{max-width:1000px;margin:auto}header{text-align:center}h1{font-size:clamp(2rem,6vw,3.4rem);margin:4px 0;background:linear-gradient(90deg,#c4b5fd,#f0abfc);color:transparent;background-clip:text}header p,.hint{color:var(--muted);line-height:1.5}.toolbar{display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;margin:20px 0}
-button{font:inherit;cursor:pointer}.action{border:1px solid #48536b;background:#202a40;color:white;border-radius:12px;padding:11px 17px}.action.primary{background:var(--purple);border-color:var(--purple);font-weight:750}.action:disabled{opacity:.45;cursor:not-allowed}
-.status{max-width:720px;margin:0 auto 18px;background:#1d2142;border:1px solid #5552a3;padding:16px;border-radius:16px;text-align:center}.status strong{display:block;font-size:1.2rem;margin-bottom:4px}.current{font-size:clamp(2rem,8vw,3.5rem);font-weight:900;color:#fde68a;line-height:1.2;margin:8px}.boards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.panel{min-width:0;background:linear-gradient(145deg,#192238,#121a2b);border:1px solid #303b54;border-radius:18px;padding:15px;box-shadow:0 14px 35px #0002}.panel h2{margin:0 0 5px;font-size:1.15rem}.sub{color:var(--muted);font-size:.9rem;margin:0 0 12px;min-height:22px}.board{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px}.cell{aspect-ratio:1;min-width:0;border-radius:9px;border:1px solid #3a4760;background:var(--tile);color:white;font-weight:800;font-size:clamp(13px,2.4vw,21px);display:grid;place-items:center;padding:0}.head{aspect-ratio:auto;min-height:34px;background:#6d45d5;border:0;font-size:clamp(12px,2vw,17px)}.cell.marked{background:#166534;border-color:#4ade80;color:#dcfce7}.cell.winning{background:#a16207!important;border-color:#fde68a!important;color:#fff7cc}.cell.free{background:#164e63;color:#cffafe}.stats{display:flex;justify-content:space-between;gap:8px;margin-top:12px;color:var(--muted);font-size:.9rem}.history{max-width:800px;margin:18px auto;background:#151d31;border:1px solid #303b54;border-radius:16px;padding:14px}.history h2{font-size:1rem;margin:0 0 10px}.called{display:flex;flex-wrap:wrap;gap:6px;min-height:32px}.pill{background:#263149;border:1px solid #46536e;border-radius:8px;padding:5px 8px;font-weight:700;font-size:.85rem}.three-stage{max-width:800px;margin:0 auto 18px;background:linear-gradient(145deg,#151d31,#0f172a);border:1px solid #394563;border-radius:18px;overflow:hidden;position:relative;min-height:220px;box-shadow:0 16px 40px #0003}.three-stage canvas{display:block;width:100%;height:260px}.three-label{position:absolute;left:14px;top:12px;z-index:1;font-size:.85rem;font-weight:800;letter-spacing:.08em;color:#c4b5fd;text-transform:uppercase}.three-fallback{position:absolute;inset:0;place-items:center;padding:24px;text-align:center;color:var(--muted);pointer-events:none}.three-fallback:not([hidden]){display:grid}.three-stage.ready .three-fallback{display:none}.footer{text-align:center;color:var(--muted);font-size:.85rem;margin:22px 0 8px}
+button,select{font:inherit}button{cursor:pointer}.action{border:1px solid #48536b;background:#202a40;color:white;border-radius:12px;padding:11px 17px}.action.primary{background:var(--purple);border-color:var(--purple);font-weight:750}.action:disabled{opacity:.45;cursor:not-allowed}
+.status{max-width:720px;margin:0 auto 18px;background:#1d2142;border:1px solid #5552a3;padding:16px;border-radius:16px;text-align:center}.status strong{display:block;font-size:1.2rem;margin-bottom:4px}.current{font-size:clamp(2rem,8vw,3.5rem);font-weight:900;color:#fde68a;line-height:1.2;margin:8px}.boards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.panel{min-width:0;background:linear-gradient(145deg,#192238,#121a2b);border:1px solid #303b54;border-radius:18px;padding:15px;box-shadow:0 14px 35px #0002}.panel h2{margin:0 0 5px;font-size:1.15rem}.sub{color:var(--muted);font-size:.9rem;margin:0 0 12px;min-height:22px}.board{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px}.cell{aspect-ratio:1;min-width:0;border-radius:9px;border:1px solid #3a4760;background:var(--tile);color:white;font-weight:800;font-size:clamp(13px,2.4vw,21px);display:grid;place-items:center;padding:0}.head{aspect-ratio:auto;min-height:34px;background:#6d45d5;border:0;font-size:clamp(12px,2vw,17px)}.cell.marked{background:#166534;border-color:#4ade80;color:#dcfce7}.cell.winning{background:#a16207!important;border-color:#fde68a!important;color:#fff7cc}.cell.free{background:#164e63;color:#cffafe}.stats{display:flex;justify-content:space-between;gap:8px;margin-top:12px;color:var(--muted);font-size:.9rem}.history{max-width:800px;margin:18px auto;background:#151d31;border:1px solid #303b54;border-radius:16px;padding:14px}.history h2{font-size:1rem;margin:0 0 10px}.called{display:flex;flex-wrap:wrap;gap:6px;min-height:32px}.pill{background:#263149;border:1px solid #46536e;border-radius:8px;padding:5px 8px;font-weight:700;font-size:.85rem}.three-stage{max-width:800px;margin:0 auto 18px;background:linear-gradient(145deg,#151d31,#0f172a);border:1px solid #394563;border-radius:18px;overflow:hidden;position:relative;min-height:220px;box-shadow:0 16px 40px #0003}.three-stage canvas{display:block;width:100%;height:260px}.three-label{position:absolute;left:14px;top:12px;z-index:1;font-size:.85rem;font-weight:800;letter-spacing:.08em;color:#c4b5fd;text-transform:uppercase}.three-help{position:absolute;right:12px;top:12px;z-index:1;color:#cbd5e1;font-size:.75rem}.three-controls{position:absolute;right:12px;bottom:12px;z-index:2}.progress-wrap{max-width:720px;margin:-6px auto 18px}.progress-meta{display:flex;justify-content:space-between;gap:8px;color:var(--muted);font-size:.8rem;margin-bottom:6px}.progress-track{height:7px;background:#29334b;border-radius:99px;overflow:hidden}.progress-fill{height:100%;width:0;background:linear-gradient(90deg,#8b5cf6,#22d3ee);transition:width .25s ease}button:focus-visible,select:focus-visible{outline:3px solid #67e8f9;outline-offset:3px}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}.three-fallback{position:absolute;inset:0;place-items:center;padding:24px;text-align:center;color:var(--muted);pointer-events:none}.three-fallback:not([hidden]){display:grid}.three-stage.ready .three-fallback{display:none}.footer{text-align:center;color:var(--muted);font-size:.85rem;margin:22px 0 8px}
 @media(max-width:650px){body{padding:15px 9px}.boards{grid-template-columns:1fr}.panel{padding:12px}.cell{font-size:clamp(16px,5vw,24px)}.sub{min-height:0}.toolbar{margin:16px 0}.status{padding:13px}}
 </style>
 </head>
 <body>
 <main>
-<header><h1>🎱 Bingo Battle</h1><p>Classic Bingo rules. One shared number draw. First card to complete a line wins.</p></header>
+<a class="sr-only" href="#game">Skip to game</a><header><h1>🎱 Bingo Battle</h1><p>Classic Bingo rules, fair shared draws, and an interactive 3D machine.</p></header>
 <div class="toolbar">
 <label for="mode">Win condition</label><select id="mode" class="action" aria-label="Choose Bingo win condition"><option value="line">1 line</option><option value="two">2 lines</option><option value="full">Full house</option></select>
 <button class="action primary" id="draw">🎱 Draw next number</button>
 <button class="action" id="newGame">↻ New game</button>
 </div>
-<section class="three-stage" id="threeStage" aria-label="Interactive 3D Bingo machine"><span class="three-label">Three.js · 3D Bingo Machine</span><div class="three-fallback" id="threeFallback" hidden></div></section>
-<section class="status" aria-live="polite"><strong id="headline">Ready to play!</strong><div class="current" id="current">—</div><span id="message">Draw a number. The same number is checked on both cards automatically.</span></section>
+<section class="three-stage" id="threeStage" aria-label="Interactive 3D Bingo machine"><span class="three-label">Three.js · 3D Bingo Machine</span><span class="three-help">Drag to rotate</span><div class="three-fallback" id="threeFallback" hidden></div><div class="three-controls"><button class="action" id="motionToggle" type="button" aria-pressed="false">Pause 3D</button></div></section>
+<section class="status" id="game" aria-live="polite" aria-atomic="true"><strong id="headline">Ready to play!</strong><div class="current" id="current">—</div><span id="message">Draw a number. The same number is checked on both cards automatically.</span></section>
+<div class="progress-wrap" aria-label="Draw progress"><div class="progress-meta"><span>Number draw progress</span><span id="progressText">0 of 75</span></div><div class="progress-track" role="progressbar" id="drawProgress" aria-label="Numbers drawn" aria-valuemin="0" aria-valuemax="75" aria-valuenow="0"><div class="progress-fill" id="progressFill"></div></div></div>
 <div class="boards">
 <section class="panel"><h2>🧑 Your card</h2><p class="sub">Numbers are marked automatically when called.</p><div class="board" id="playerBoard"></div><div class="stats"><span id="playerMarks">0 numbers called on card</span><span id="playerLines">Lines: 0</span></div></section>
 <section class="panel"><h2>🖥️ Computer card</h2><p class="sub">Same number pool and same rules as your card.</p><div class="board" id="cpuBoard"></div><div class="stats"><span id="cpuMarks">0 numbers called on card</span><span id="cpuLines">Lines: 0</span></div></section>
@@ -34,10 +36,13 @@ button{font:inherit;cursor:pointer}.action{border:1px solid #48536b;background:#
 
 <script type="module">
 try {
- const bootTimer = setTimeout(() => { const f=document.getElementById("threeFallback"); if(f && !document.getElementById("threeStage").classList.contains("ready")) f.textContent="3D is taking too long to load. Check your internet connection or CDN access; Bingo still works below."; },8000);
- const THREE = await import("https://unpkg.com/three@0.180.0/build/three.module.js");
+ let bootTimer = setTimeout(() => { const f=document.getElementById("threeFallback"); if(f && !document.getElementById("threeStage").classList.contains("ready")) { f.textContent="3D is taking too long to load. Check your connection; Bingo still works below."; f.hidden=false; } },8000);
+ let THREE;
+ try { THREE = await import("https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js"); }
+ catch(firstError) { THREE = await import("https://unpkg.com/three@0.180.0/build/three.module.js"); }
  const stage=document.getElementById("threeStage");
  const fallback=document.getElementById("threeFallback");
+ const motionToggle=document.getElementById("motionToggle");
  const scene=new THREE.Scene();
  scene.background=new THREE.Color("#10172b");
  scene.fog=new THREE.Fog("#10172b",9,18);
@@ -69,7 +74,7 @@ try {
   const g=ctx.createRadialGradient(75,55,8,128,128,180);g.addColorStop(0,"#ffffff");g.addColorStop(.22,color);g.addColorStop(1,"#111827");
   ctx.fillStyle=g;ctx.fillRect(0,0,256,256);
   ctx.beginPath();ctx.arc(128,128,70,0,Math.PI*2);ctx.fillStyle="#ffffff";ctx.fill();
-  ctx.fillStyle="#111827";ctx.font="bold 76px system-ui";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText(String(text),128,132);
+  ctx.fillStyle="#111827";ctx.font=(String(text).length>3?"bold 48px system-ui":"bold 76px system-ui");ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText(String(text),128,132);
   const tex=new THREE.CanvasTexture(canvas);tex.colorSpace=THREE.SRGBColorSpace;return tex;
  }
  const colors=["#60a5fa","#a78bfa","#f472b6","#34d399","#fbbf24"];
@@ -90,7 +95,7 @@ try {
  let drawFlash=0,drawBounce=0,dragging=false,lastPointerX=0,lastPointerY=0,spinX=0,spinY=0;
  function updateBall(n,letter){
   displayBall.material.map.dispose();
-  displayBall.material.map=ballTexture(n,colors[Math.floor((n-1)/15)]);
+  displayBall.material.map=ballTexture(letter+"-"+n,colors[Math.floor((n-1)/15)]);
   displayBall.material.needsUpdate=true;
   drawFlash=1;drawBounce=1;
  
@@ -110,8 +115,12 @@ try {
  if("ResizeObserver" in window)new ResizeObserver(resize).observe(stage);else window.addEventListener("resize",resize);
  const clock=new THREE.Clock();
  const reduceMotion=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+ let animationPaused=reduceMotion;
+ motionToggle.textContent=animationPaused?"Resume 3D":"Pause 3D";motionToggle.setAttribute("aria-pressed",String(animationPaused));
+ motionToggle.addEventListener("click",()=>{animationPaused=!animationPaused;motionToggle.textContent=animationPaused?"Resume 3D":"Pause 3D";motionToggle.setAttribute("aria-pressed",String(animationPaused));});
  renderer.setAnimationLoop(()=>{
-  const t=clock.getElapsedTime(),motion=reduceMotion?0:t;
+  if(document.hidden||animationPaused)return;
+  const t=clock.getElapsedTime(),motion=t;
   globe.rotation.y=motion*.16+spinY;globe.rotation.x=spinX;wire.rotation.y=-motion*.12+spinY;wire.rotation.x=spinX;
   rings.forEach((r,i)=>{r.rotation.z=motion*(i%2?-.18:.15);});
   balls.forEach(b=>{b.position.y=b.userData.baseY+Math.sin(motion*2+b.userData.phase)*.07;b.rotation.x=motion*.4+b.userData.phase;b.rotation.y=motion*.6;});
@@ -124,8 +133,10 @@ try {
 } catch(error) {
  const stage=document.getElementById("threeStage");
  const fallback=document.getElementById("threeFallback");
+ clearTimeout(bootTimer);
  if(stage)stage.classList.remove("ready");
  if(fallback){fallback.textContent="3D machine unavailable. The Bingo game still works; try refreshing with an internet connection.";fallback.hidden=false;}
+ const toggle=document.getElementById("motionToggle");if(toggle)toggle.disabled=true;
  console.warn("Three.js scene unavailable:",error);
 }
 </script>
@@ -181,6 +192,9 @@ function render(){
  $("playerLines").textContent="Lines: "+pLines.length;
  $("cpuLines").textContent="Lines: "+cLines.length;
  $("drawCount").textContent=called.size;
+ $("progressText").textContent=called.size+" of 75";
+ $("progressFill").style.width=(called.size/75*100)+"%";
+ $("drawProgress").setAttribute("aria-valuenow",String(called.size));
  const history=$("history");history.innerHTML="";
  if(!called.size){history.innerHTML='<span class="hint">No numbers drawn yet.</span>';return;}
  for(const n of called){

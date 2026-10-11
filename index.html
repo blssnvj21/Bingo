@@ -34,7 +34,8 @@ button{font:inherit;cursor:pointer}.action{border:1px solid #48536b;background:#
 
 <script type="module">
 try {
- const THREE = await import("https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js");
+ const bootTimer = setTimeout(() => { const f=document.getElementById("threeFallback"); if(f && !document.getElementById("threeStage").classList.contains("ready")) f.textContent="3D is taking too long to load. Check your internet connection or CDN access; Bingo still works below."; },8000);
+ const THREE = await import("https://unpkg.com/three@0.180.0/build/three.module.js");
  const stage=document.getElementById("threeStage");
  const scene=new THREE.Scene();
  scene.background=new THREE.Color("#10172b");
@@ -46,6 +47,7 @@ try {
  renderer.setSize(stage.clientWidth,260);
  renderer.outputColorSpace=THREE.SRGBColorSpace;
  stage.appendChild(renderer.domElement);
+ clearTimeout(bootTimer);
  stage.classList.add("ready");
  scene.add(new THREE.HemisphereLight(0xcbd5ff,0x1b2440,2.2));
  const key=new THREE.PointLight(0xa78bfa,45,18);key.position.set(2,4,4);scene.add(key);
@@ -120,7 +122,7 @@ try {
  });
 } catch(error) {
  const fallback=document.getElementById("threeFallback");
- if(fallback)fallback.textContent="3D mode could not load (the external Three.js library may be blocked). The Bingo game still works normally.";
+ if(fallback)fallback.textContent="3D mode could not load. Your network may block the Three.js CDN; the Bingo game still works normally.";
  console.warn("Three.js scene unavailable:",error);
 }
 </script>

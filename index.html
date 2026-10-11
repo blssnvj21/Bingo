@@ -106,14 +106,16 @@ try {
  const resize=()=>{const w=Math.max(280,stage.clientWidth);renderer.setSize(w,260,false);camera.aspect=w/260;camera.updateProjectionMatrix();};
  if("ResizeObserver" in window)new ResizeObserver(resize).observe(stage);else window.addEventListener("resize",resize);
  const clock=new THREE.Clock();
- const reduceMotion=window.matchMedia("(prefers-reduced-motion: reduce)").matches;\n renderer.setAnimationLoop(()=>{
-  const t=clock.getElapsedTime();
-  globe.rotation.y=t*.16+spinY;globe.rotation.x=spinX;wire.rotation.y=-t*.12+spinY;wire.rotation.x=spinX;
-  rings.forEach((r,i)=>{r.rotation.z=t*(i%2?-.18:.15);});
-  balls.forEach(b=>{b.position.y=b.userData.baseY+Math.sin(t*2+b.userData.phase)*.07;b.rotation.x=t*.4+b.userData.phase;b.rotation.y=t*.6;});
-  drawGroup.position.y=Math.sin(t*1.4)*.06;
-  displayBall.scale.setScalar(1+drawFlash*.12);displayRing.rotation.z=t*.45;
-  drawFlash=Math.max(0,drawFlash-.035);
+ const reduceMotion=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+ renderer.setAnimationLoop(()=>{
+  const t=clock.getElapsedTime(),motion=reduceMotion?0:t;
+  globe.rotation.y=motion*.16+spinY;globe.rotation.x=spinX;wire.rotation.y=-motion*.12+spinY;wire.rotation.x=spinX;
+  rings.forEach((r,i)=>{r.rotation.z=motion*(i%2?-.18:.15);});
+  balls.forEach(b=>{b.position.y=b.userData.baseY+Math.sin(motion*2+b.userData.phase)*.07;b.rotation.x=motion*.4+b.userData.phase;b.rotation.y=motion*.6;});
+  drawGroup.position.y=Math.sin(motion*1.4)*.06+drawBounce*.48;
+  displayBall.rotation.y=motion*.55+spinY;displayBall.rotation.x=Math.sin(motion)*.16+spinX;
+  displayBall.scale.setScalar(1+drawFlash*.16);displayRing.rotation.z=motion*.45;
+  drawFlash=Math.max(0,drawFlash-.035);drawBounce=Math.max(0,drawBounce-.035);
   renderer.render(scene,camera);
  });
 } catch(error) {

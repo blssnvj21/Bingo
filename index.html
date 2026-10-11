@@ -65,9 +65,9 @@ function renderBoard(card,marks,id,winning){
  });
 }
 function render(){
- const pLines=getWinningLines(playerCard,playerMarks),cLines=getWinningLines(cpuCard,cpuMarks);
- renderBoard(playerCard,playerMarks,"playerBoard",pLines);
- renderBoard(cpuCard,cpuMarks,"cpuBoard",cLines);
+ const pLines=getWinningLines(playerCard,called),cLines=getWinningLines(cpuCard,called);
+ renderBoard(playerCard,called,"playerBoard",pLines);
+ renderBoard(cpuCard,called,"cpuBoard",cLines);
  $("playerMarks").textContent=playerCard.filter(v=>v!=="FREE"&&called.has(v)).length+" numbers called on card";
  $("cpuMarks").textContent=cpuCard.filter(v=>v!=="FREE"&&called.has(v)).length+" numbers called on card";
  $("playerLines").textContent="Lines: "+pLines.length;
@@ -83,7 +83,7 @@ function drawNext(){
  if(over||drawBag.length===0)return;
  const n=drawBag.pop();called.add(n);
  $("current").textContent=LETTERS[Math.floor((n-1)/15)]+" — "+n;
- const p=getWinningLines(playerCard,playerMarks),c=getWinningLines(cpuCard,cpuMarks);
+ const p=getWinningLines(playerCard,called),c=getWinningLines(cpuCard,called);
  if(p.length||c.length){
   over=true;$("draw").disabled=true;
   if(p.length&&c.length){$("headline").textContent="🤝 Draw! Both cards got Bingo";$("message").textContent="Both cards completed a line on the same number. A fair tie!";}

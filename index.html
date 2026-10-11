@@ -122,8 +122,10 @@ try {
   renderer.render(scene,camera);
  });
 } catch(error) {
+ const stage=document.getElementById("threeStage");
  const fallback=document.getElementById("threeFallback");
- if(fallback)fallback.textContent="3D mode could not load. Your network may block the Three.js CDN; the Bingo game still works normally.";
+ if(stage)stage.classList.remove("ready");
+ if(fallback){fallback.textContent="3D machine unavailable. The Bingo game still works; try refreshing with an internet connection.";fallback.hidden=false;}
  console.warn("Three.js scene unavailable:",error);
 }
 </script>

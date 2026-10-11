@@ -18,6 +18,7 @@ button{font:inherit;cursor:pointer}.action{border:1px solid #48536b;background:#
 <main>
 <header><h1>🎱 Bingo Battle</h1><p>Classic Bingo rules. One shared number draw. First card to complete a line wins.</p></header>
 <div class="toolbar">
+<label for="mode">Win condition</label><select id="mode" class="action" aria-label="Choose Bingo win condition"><option value="line">1 line</option><option value="two">2 lines</option><option value="full">Full house</option></select>
 <button class="action primary" id="draw">🎱 Draw next number</button>
 <button class="action" id="newGame">↻ New game</button>
 </div>
@@ -64,6 +65,13 @@ function renderBoard(card,marks,id,winning){
   root.appendChild(e);
  });
 }
+function hasWon(card,marks){
+ const completed=getWinningLines(card,marks).length;
+ const mode=$("mode").value;
+ if(mode==="two")return completed>=2;
+ if(mode==="full")return card.every(v=>v==="FREE"||marks.has(v));
+ return completed>=1;
+}
 function render(){
  const pLines=getWinningLines(playerCard,called),cLines=getWinningLines(cpuCard,called);
  renderBoard(playerCard,called,"playerBoard",pLines);
@@ -83,8 +91,8 @@ function drawNext(){
  if(over||drawBag.length===0)return;
  const n=drawBag.pop();called.add(n);
  $("current").textContent=LETTERS[Math.floor((n-1)/15)]+" — "+n;
- const p=getWinningLines(playerCard,called),c=getWinningLines(cpuCard,called);
- if(p.length||c.length){
+ const p=hasWon(playerCard,called),c=hasWon(cpuCard,called);
+ if(p||c){
   over=true;$("draw").disabled=true;
   if(p&&c){$("headline").textContent="🤝 Draw! Both cards got Bingo";$("message").textContent="Both cards completed a line on the same number. A fair tie!";}
   else if(p){$("headline").textContent="🏆 Bingo! You win!";$("message").textContent="Your card completed a line first.";}
@@ -106,6 +114,19 @@ function newGame(){
 }
 $("draw").addEventListener("click",drawNext);
 $("newGame").addEventListener("click",newGame);
+$("mode").addEventListener("change",()=>{
+ const p=hasWon(playerCard,called),c=hasWon(cpuCard,called);
+ if(p||c){
+  over=true;$("draw").disabled=true;
+  if(p&&c){$("headline").textContent="🤝 Tie!";$("message").textContent="Both cards meet the selected win condition.";}
+  else if(p){$("headline").textContent="🏆 Bingo! You win!";$("message").textContent="Your card meets the selected win condition.";}
+  else{$("headline").textContent="🖥️ Computer wins!";$("message").textContent="The computer card meets the selected win condition.";}
+ }else{
+  $("headline").textContent="Win condition updated";
+  $("message").textContent="Both cards keep the same called numbers. The new win condition applies from now on.";
+ }
+ render();
+});
 newGame();
 })();
 </script>

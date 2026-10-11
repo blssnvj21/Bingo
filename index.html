@@ -35,8 +35,9 @@ button,select{font:inherit}button{cursor:pointer}.action{border:1px solid #48536
 </main>
 
 <script type="module">
+let bootTimer;
 try {
- let bootTimer = setTimeout(() => { const f=document.getElementById("threeFallback"); if(f && !document.getElementById("threeStage").classList.contains("ready")) { f.textContent="3D is taking too long to load. Check your connection; Bingo still works below."; f.hidden=false; } },8000);
+ bootTimer = setTimeout(() => { const f=document.getElementById("threeFallback"); if(f && !document.getElementById("threeStage").classList.contains("ready")) { f.textContent="3D is taking too long to load. Check your connection; Bingo still works below."; f.hidden=false; } },8000);
  let THREE;
  try { THREE = await import("https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js"); }
  catch(firstError) { THREE = await import("https://unpkg.com/three@0.180.0/build/three.module.js"); }

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://blssnvj21.github.io/Bingo/sitemap.xml

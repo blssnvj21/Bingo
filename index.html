@@ -44,7 +44,7 @@ function makeCard(){const card=Array(25);for(let c=0;c<5;c++){const start=c*15+1
 function isMarked(card,marks,i){return card[i]==="FREE"||marks.has(i);}
 function winningLine(card,marks){return lines.find(line=>line.every(i=>isMarked(card,marks,i)))||null;}
 function completedLines(card,marks){return lines.filter(line=>line.every(i=>isMarked(card,marks,i))).length;}
-function countMarks(marks){return marks.size+1;}
+function countMarks(marks){return marks.size;}
 function renderBoard(card,marks,id,isPlayer,winning){
  const root=$(id);root.innerHTML="";
  LETTERS.forEach(letter=>{const e=document.createElement("div");e.className="cell head";e.textContent=letter;root.appendChild(e);});

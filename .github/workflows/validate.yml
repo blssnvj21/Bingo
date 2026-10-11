@@ -63,7 +63,7 @@ jobs:
           from pathlib import Path
 
           html = Path("index.html").read_text(encoding="utf-8")
-          scripts = re.findall(r"<script(?:\\s+type=\"module\")?>(.*?)</script>", html, re.S)
+          scripts = re.findall(r"<script(?:\s+type=\"module\")?>(.*?)</script>", html, re.S)
           if len(scripts) < 2:
               raise SystemExit(f"Expected at least two inline scripts, found {len(scripts)}")
 

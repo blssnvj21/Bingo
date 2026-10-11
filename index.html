@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#111827">
+<title>Bingo Battle — You vs AI</title>
+<style>
+:root{color-scheme:dark;--bg:#0b1020;--panel:#151d31;--tile:#263149;--muted:#a9b6cc;--purple:#8b5cf6;--green:#22c55e;--gold:#fbbf24}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#20234a 0,#0b1020 55%);color:#f8fafc;font-family:system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh;padding:22px 12px}
+main{max-width:1000px;margin:auto}header{text-align:center}h1{font-size:clamp(2rem,6vw,3.4rem);margin:4px 0;background:linear-gradient(90deg,#c4b5fd,#f0abfc);color:transparent;background-clip:text}header p,.hint{color:var(--muted);line-height:1.5}.toolbar{display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;margin:20px 0}
+button,select{font:inherit}button{cursor:pointer}.action,select{border:1px solid #48536b;background:#202a40;color:white;border-radius:12px;padding:11px 15px}.action.primary{background:var(--purple);border-color:var(--purple);font-weight:750}.action:disabled{opacity:.45;cursor:not-allowed}select{max-width:100%}
+.status{max-width:650px;margin:0 auto 18px;background:#1d2142;border:1px solid #5552a3;padding:16px;border-radius:16px;text-align:center}.status strong{display:block;font-size:1.2rem;margin-bottom:4px}.boards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.panel{min-width:0;background:linear-gradient(145deg,#192238,#121a2b);border:1px solid #303b54;border-radius:18px;padding:15px;box-shadow:0 14px 35px #0002}.panel h2{margin:0 0 5px;font-size:1.15rem}.sub{color:var(--muted);font-size:.9rem;margin:0 0 12px;min-height:22px}.board{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px}.cell{aspect-ratio:1;min-width:0;border-radius:9px;border:1px solid #3a4760;background:var(--tile);color:white;font-weight:800;font-size:clamp(13px,2.4vw,21px);display:grid;place-items:center;padding:0}.head{aspect-ratio:auto;min-height:34px;background:#6d45d5;border:0;font-size:clamp(12px,2vw,17px)}button.cell:not(:disabled):hover{border-color:#c4b5fd;transform:translateY(-1px)}.cell:disabled{cursor:default;opacity:1}.cell.marked{background:#166534;border-color:#4ade80;color:#dcfce7}.cell.winning{background:#a16207!important;border-color:#fde68a!important;color:#fff7cc}.cell.free{background:#164e63;color:#cffafe}.player .cell.pickable:not(.marked):not(.head){box-shadow:inset 0 0 0 1px #8b5cf6}.stats{display:flex;justify-content:space-between;gap:8px;margin-top:12px;color:var(--muted);font-size:.9rem}.progress{height:6px;background:#303b54;border-radius:99px;overflow:hidden;margin-top:8px}.progress span{display:block;height:100%;width:0;background:linear-gradient(90deg,#8b5cf6,#4ade80);transition:width .2s}.footer{text-align:center;color:var(--muted);font-size:.85rem;margin:22px 0 8px}.tag{display:inline-block;border:1px solid #4b5563;border-radius:99px;padding:3px 8px;font-size:.75rem;color:#ddd6fe;margin-left:6px}
+@media(max-width:650px){body{padding:15px 9px}.boards{grid-template-columns:1fr}.panel{padding:12px}.cell{font-size:clamp(16px,5vw,24px)}.sub{min-height:0}.toolbar{margin:16px 0}.status{padding:13px}}
+</style>
+</head>
+<body>
+<main>
+<header><h1>🎱 Bingo Battle</h1><p>One card. One clever computer. First to make a line wins.</p></header>
+<div class="toolbar">
+<label for="difficulty">AI difficulty</label>
+<select id="difficulty" aria-label="AI difficulty"><option value="easy">Easy · casual</option><option value="medium">Medium · thoughtful</option><option value="hard" selected>Hard · strategic</option></select>
+<button class="action primary" id="newGame">↻ New game</button>
+</div>
+<section class="status" aria-live="polite"><strong id="headline">Your move!</strong><span id="message">Choose any unmarked number on your card. The computer will then make its move.</span></section>
+<div class="boards">
+<section class="panel player"><h2>🧑 Your card <span class="tag">YOU</span></h2><p class="sub">Tap a number to mark it on your turn.</p><div class="board" id="playerBoard"></div><div class="stats"><span id="playerCount">0 marks</span><span id="playerLines">Lines: 0/12</span></div><div class="progress"><span id="playerProgress"></span></div></section>
+<section class="panel"><h2>🤖 Computer card <span class="tag">AI</span></h2><p class="sub" id="cpuHint">The AI scores possible moves before choosing.</p><div class="board" id="cpuBoard"></div><div class="stats"><span id="cpuCount">0 marks</span><span id="cpuLines">Lines: 0/12</span></div><div class="progress"><span id="cpuProgress"></span></div></section>
+</div>
+<p class="footer">Static HTML, CSS and JavaScript · No backend · No database · No localStorage</p>
+</main>
+<script>
+(() => {
+const $ = id => document.getElementById(id);
+const LETTERS = ["B","I","N","G","O"];
+const lines = [];
+for(let r=0;r<5;r++) lines.push(Array.from({length:5},(_,c)=>r*5+c));
+for(let c=0;c<5;c++) lines.push(Array.from({length:5},(_,r)=>r*5+c));
+lines.push([0,6,12,18,24],[4,8,12,16,20]);
+let playerCard,cpuCard,playerMarks,cpuMarks,turn,over,busy,playerWinning,cpuWinning;
+
+function shuffled(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function makeCard(){const card=Array(25);for(let c=0;c<5;c++){const start=c*15+1;const nums=shuffled(Array.from({length:15},(_,i)=>start+i)).slice(0,5);for(let r=0;r<5;r++)card[r*5+c]=nums[r];}card[12]="FREE";return card;}
+function isMarked(card,marks,i){return card[i]==="FREE"||marks.has(i);}
+function winningLine(card,marks){return lines.find(line=>line.every(i=>isMarked(card,marks,i)))||null;}
+function completedLines(card,marks){return lines.filter(line=>line.every(i=>isMarked(card,marks,i))).length;}
+function countMarks(marks){return marks.size+1;}
+function renderBoard(card,marks,id,isPlayer,winning){
+ const root=$(id);root.innerHTML="";
+ LETTERS.forEach(letter=>{const e=document.createElement("div");e.className="cell head";e.textContent=letter;root.appendChild(e);});
+ card.forEach((value,i)=>{const e=document.createElement(isPlayer?"button":"div");e.className="cell";
+ if(value==="FREE")e.classList.add("free");
+ if(isMarked(card,marks,i))e.classList.add("marked");
+ if(winning&&winning.includes(i))e.classList.add("winning");
+ if(isPlayer){e.type="button";if(!over&&!busy&&turn==="player"&&!marks.has(i)&&value!=="FREE")e.classList.add("pickable");e.disabled=over||busy||turn!=="player"||marks.has(i)||value==="FREE";e.setAttribute("aria-label","Mark number "+value);e.addEventListener("click",()=>playerMove(i));}
+ e.textContent=value==="FREE"?"★":value;root.appendChild(e);
+ });
+}
+function render(){
+ renderBoard(playerCard,playerMarks,"playerBoard",true,playerWinning);
+ renderBoard(cpuCard,cpuMarks,"cpuBoard",false,cpuWinning);
+ $("playerCount").textContent=countMarks(playerMarks)+" / 25 squares";
+ $("cpuCount").textContent=countMarks(cpuMarks)+" / 25 squares";
+ const pl=completedLines(playerCard,playerMarks),cl=completedLines(cpuCard,cpuMarks);
+ $("playerLines").textContent="Lines: "+pl+"/12";
+ $("cpuLines").textContent="Lines: "+cl+"/12";
+ $("playerProgress").style.width=(pl/12*100)+"%";
+ $("cpuProgress").style.width=(cl/12*100)+"%";
+}
+function chooseMove(card,marks,difficulty){
+ const available=card.map((_,i)=>i).filter(i=>card[i]!=="FREE"&&!marks.has(i));
+ if(difficulty==="easy")return available[Math.floor(Math.random()*available.length)];
+ let best=-Infinity,bestMoves=[];
+ for(const i of available){
+   let score=0;
+   for(const line of lines){
+     if(!line.includes(i))continue;
+     const marked=line.filter(j=>isMarked(card,marks,j)).length;
+     const empty=line.filter(j=>j!==i&&!isMarked(card,marks,j)).length;
+     if(empty===0)score+=10000;
+     else score+=(marked+1)*(marked+1)/(empty+1);
+   }
+   if(difficulty==="hard"){
+     // Prefer moves that create multiple simultaneous threats.
+     let threats=0;
+     for(const line of lines){if(!line.includes(i))continue;
+       const marked=line.filter(j=>isMarked(card,marks,j)).length;
+       const unmarked=line.filter(j=>j!==i&&!isMarked(card,marks,j)).length;
+       if(marked+1>=3&&unmarked<=2)threats++;
+     }
+     score+=threats*2.5+Math.random()*0.15;
+   }else score+=Math.random()*1.2;
+   if(score>best){best=score;bestMoves=[i];}
+   else if(Math.abs(score-best)<0.0001)bestMoves.push(i);
+ }
+ return bestMoves[Math.floor(Math.random()*bestMoves.length)];
+}
+function finish(){
+ playerWinning=winningLine(playerCard,playerMarks);
+ cpuWinning=winningLine(cpuCard,cpuMarks);
+ if(!playerWinning&&!cpuWinning)return false;
+ over=true;busy=false;turn="done";
+ if(playerWinning&&cpuWinning){$("headline").textContent="🤝 Double Bingo!";$("message").textContent="Both cards completed a line. It's a tie!";}
+ else if(playerWinning){$("headline").textContent="🏆 BINGO! You win!";$("message").textContent="You outsmarted the computer. Fancy a rematch?";}
+ else{$("headline").textContent="🤖 Computer wins!";$("message").textContent="The AI found its line first. Change difficulty or try again!";}
+ render();return true;
+}
+function playerMove(i){
+ if(over||busy||turn!=="player"||playerMarks.has(i))return;
+ playerMarks.add(i);
+ if(finish())return;
+ busy=true;turn="cpu";
+ $("headline").textContent="🤖 Computer is thinking…";
+ $("message").textContent="It is evaluating lines and possible winning moves.";
+ render();
+ window.setTimeout(()=>{
+   if(over)return;
+   const move=chooseMove(cpuCard,cpuMarks,$("difficulty").value);
+   if(move!==undefined)cpuMarks.add(move);
+   if(finish())return;
+   busy=false;turn="player";
+   $("headline").textContent="Your move!";
+   $("message").textContent="Choose an unmarked number. The computer will respond after your pick.";
+   render();
+ },450);
+}
+function newGame(){
+ playerCard=makeCard();cpuCard=makeCard();
+ playerMarks=new Set([12]);cpuMarks=new Set([12]);
+ turn="player";over=false;busy=false;playerWinning=null;cpuWinning=null;
+ $("headline").textContent="Your move!";
+ $("message").textContent="Choose any unmarked number on your card. The computer will then make its move.";
+ $("cpuHint").textContent="Difficulty: "+$("difficulty").selectedOptions[0].textContent+". The AI scores possible moves.";
+ render();
+}
+$("newGame").addEventListener("click",newGame);
+$("difficulty").addEventListener("change",()=>{$("cpuHint").textContent="Difficulty: "+$("difficulty").selectedOptions[0].textContent+". The AI scores possible moves.";});
+newGame();
+})();
+</script>
+</body>
+</html>

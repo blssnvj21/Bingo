@@ -37,7 +37,7 @@ const lines=[];
 for(let r=0;r<5;r++)lines.push(Array.from({length:5},(_,c)=>r*5+c));
 for(let c=0;c<5;c++)lines.push(Array.from({length:5},(_,r)=>r*5+c));
 lines.push([0,6,12,18,24],[4,8,12,16,20]);
-let playerCard,cpuCard,drawBag,called,playerMarks,cpuMarks,over;
+let playerCard,cpuCard,drawBag,called,over;
 
 function shuffled(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 function makeCard(){
@@ -86,8 +86,8 @@ function drawNext(){
  const p=getWinningLines(playerCard,called),c=getWinningLines(cpuCard,called);
  if(p.length||c.length){
   over=true;$("draw").disabled=true;
-  if(p.length&&c.length){$("headline").textContent="🤝 Draw! Both cards got Bingo";$("message").textContent="Both cards completed a line on the same number. A fair tie!";}
-  else if(p.length){$("headline").textContent="🏆 Bingo! You win!";$("message").textContent="Your card completed a line first.";}
+  if(p&&c){$("headline").textContent="🤝 Draw! Both cards got Bingo";$("message").textContent="Both cards completed a line on the same number. A fair tie!";}
+  else if(p){$("headline").textContent="🏆 Bingo! You win!";$("message").textContent="Your card completed a line first.";}
   else{$("headline").textContent="🖥️ Computer wins!";$("message").textContent="The computer card completed a line first.";}
  }else if(drawBag.length===0){
   over=true;$("draw").disabled=true;$("headline").textContent="No Bingo this game";$("message").textContent="All 75 numbers were drawn. Start a new game for fresh cards.";
@@ -99,7 +99,7 @@ function drawNext(){
 function newGame(){
  playerCard=makeCard();cpuCard=makeCard();
  drawBag=shuffled(Array.from({length:75},(_,i)=>i+1));
- called=new Set();playerMarks=new Set();cpuMarks=new Set();over=false;
+ called=new Set();over=false;
  $("current").textContent="—";$("headline").textContent="Ready to play!";
  $("message").textContent="Draw a number. The same number is checked on both cards automatically.";
  $("draw").disabled=false;render();

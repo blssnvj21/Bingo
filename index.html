@@ -181,7 +181,7 @@ const lines=[];
 for(let r=0;r<5;r++)lines.push(Array.from({length:5},(_,c)=>r*5+c));
 for(let c=0;c<5;c++)lines.push(Array.from({length:5},(_,r)=>r*5+c));
 lines.push([0,6,12,18,24],[4,8,12,16,20]);
-let playerCard,cpuCard,drawBag,called,playerMarked,over;
+let playerCard,cpuCard,drawBag,called,playerMarked,over,pendingNumber,cpuWinPending;
 
 function shuffled(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 function makeCard(){
@@ -238,14 +238,17 @@ function render(){
 }
 function drawNext(){
  if(over||drawBag.length===0)return;
+ if(pendingNumber!==null){$("message").textContent="Mark the called number "+pendingNumber+" on your card before drawing again.";return;}
  const n=drawBag.pop();called.add(n);window.dispatchEvent(new CustomEvent("bingo-draw",{detail:{number:n,letter:LETTERS[Math.floor((n-1)/15)]}}));if(called.size===1)$("mode").disabled=true;
  $("current").textContent=LETTERS[Math.floor((n-1)/15)]+" — "+n;
- const p=hasWon(playerCard,playerMarked),c=hasWon(cpuCard,called);
- if(p||c){
-  over=true;$("draw").disabled=true;
-  if(p&&c){$("headline").textContent="🤝 Draw! Both cards got Bingo";$("message").textContent="Both cards completed a line on the same number. A fair tie!";}
-  else if(p){$("headline").textContent="🏆 Bingo! You win!";$("message").textContent="Your card completed a line first.";}
-  else{$("headline").textContent="🖥️ Computer wins!";$("message").textContent="The computer card completed a line first.";}
+ const c=hasWon(cpuCard,called);
+ const needsPlayerMark=playerCard.includes(n)&&!playerMarked.has(n);
+ if(c&&needsPlayerMark){
+  cpuWinPending=true;pendingNumber=n;$("draw").disabled=true;
+  $("headline").textContent="⏳ Computer has Bingo — your turn";
+  $("message").textContent="The computer completed its pattern, but you must get a fair chance to mark "+n+" on your card before the result is decided.";
+ }else if(c){
+  over=true;$("draw").disabled=true;$("headline").textContent="🖥️ Computer wins!";$("message").textContent="The computer completed its pattern. You had your chance to mark the called number on your card.";
  }else if(drawBag.length===0){
   $("draw").disabled=true;$("headline").textContent="All 75 numbers called";$("message").textContent="Tap the called numbers on your card to mark them and check your pattern.";
  }else{
@@ -257,7 +260,7 @@ function newGame(){
  window.dispatchEvent(new Event("bingo-new-game"));
  playerCard=makeCard();cpuCard=makeCard();
  drawBag=shuffled(Array.from({length:75},(_,i)=>i+1));
- called=new Set();playerMarked=new Set();over=false;$("mode").disabled=false;
+ called=new Set();playerMarked=new Set();over=false;pendingNumber=null;cpuWinPending=false;$("mode").disabled=false;
  $("current").textContent="—";$("headline").textContent="Ready to play!";
  $("message").textContent="Draw a number, then tap that called number on your card to mark it.";
  $("draw").disabled=false;render();
@@ -269,9 +272,18 @@ $("playerBoard").addEventListener("click",event=>{
  const value=playerCard[Number(button.dataset.index)];
  if(typeof value!=="number"||!called.has(value)||playerMarked.has(value))return;
  playerMarked.add(value);
- if(hasWon(playerCard,playerMarked)){
-  over=true;$("draw").disabled=true;$("headline").textContent="🏆 Bingo! You win!";$("message").textContent="You completed the winning pattern by marking your called numbers.";
- }else{$("message").textContent="Marked "+value+". Keep marking called numbers on your card."}
+ pendingNumber=null;
+ const playerWon=hasWon(playerCard,playerMarked);
+ if(playerWon){
+  over=true;$("draw").disabled=true;
+  if(cpuWinPending){$("headline").textContent="🤝 Fair tie! Both got Bingo";$("message").textContent="Both sides completed the selected pattern on this draw."}
+  else{$("headline").textContent="🏆 Bingo! You win!";$("message").textContent="You completed the winning pattern by marking your called numbers."}
+ }else if(cpuWinPending){
+  over=true;$("draw").disabled=true;$("headline").textContent="🖥️ Computer wins!";$("message").textContent="After you had a chance to mark the called number, the computer was the only card to meet the win condition."
+ }else{
+  $("draw").disabled=false;$("headline").textContent="Number marked: "+value;$("message").textContent="Marked "+value+". Draw the next number when you're ready."
+ }
+ cpuWinPending=false;
  render();
 });
 $("newGame").addEventListener("click",newGame);

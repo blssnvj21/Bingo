@@ -242,13 +242,13 @@ function drawNext(){
  const n=drawBag.pop();called.add(n);window.dispatchEvent(new CustomEvent("bingo-draw",{detail:{number:n,letter:LETTERS[Math.floor((n-1)/15)]}}));if(called.size===1)$("mode").disabled=true;
  $("current").textContent=LETTERS[Math.floor((n-1)/15)]+" — "+n;
  const c=hasWon(cpuCard,called);
- const needsPlayerMark=playerCard.includes(n)&&!playerMarked.has(n);
- if(c&&needsPlayerMark){
+ const unmarkedCalledOnPlayerCard=playerCard.some(value=>typeof value==="number"&&called.has(value)&&!playerMarked.has(value));
+ if(c&&unmarkedCalledOnPlayerCard){
   cpuWinPending=true;pendingNumber=n;$("draw").disabled=true;
-  $("headline").textContent="⏳ Computer has Bingo — your turn";
-  $("message").textContent="The computer completed its pattern, but you must get a fair chance to mark "+n+" on your card before the result is decided.";
+  $("headline").textContent="⏳ Computer has Bingo — finish your turn";
+  $("message").textContent="Before the computer can win, mark every called number that appears on your card. If your pattern wins too, the result will be a tie.";
  }else if(c){
-  over=true;$("draw").disabled=true;$("headline").textContent="🖥️ Computer wins!";$("message").textContent="The computer completed its pattern. You had your chance to mark the called number on your card.";
+  over=true;$("draw").disabled=true;$("headline").textContent="🖥️ Computer wins!";$("message").textContent="The computer completed its pattern, and you had no unmarked called numbers left on your card.";
  }else if(drawBag.length===0){
   $("draw").disabled=true;$("headline").textContent="All 75 numbers called";$("message").textContent="Tap the called numbers on your card to mark them and check your pattern.";
  }else{
@@ -279,11 +279,17 @@ $("playerBoard").addEventListener("click",event=>{
   if(cpuWinPending){$("headline").textContent="🤝 Fair tie! Both got Bingo";$("message").textContent="Both sides completed the selected pattern on this draw."}
   else{$("headline").textContent="🏆 Bingo! You win!";$("message").textContent="You completed the winning pattern by marking your called numbers."}
  }else if(cpuWinPending){
-  over=true;$("draw").disabled=true;$("headline").textContent="🖥️ Computer wins!";$("message").textContent="After you had a chance to mark the called number, the computer was the only card to meet the win condition."
+  const remaining=playerCard.some(cardValue=>typeof cardValue==="number"&&called.has(cardValue)&&!playerMarked.has(cardValue));
+  if(remaining){
+   $("draw").disabled=true;$("headline").textContent="⏳ Finish marking your card";
+   $("message").textContent="There are still called numbers on your card to mark. The computer's result is on hold until you've had your turn.";
+  }else{
+   over=true;$("draw").disabled=true;$("headline").textContent="🖥️ Computer wins!";$("message").textContent="You had a chance to mark every called number on your card, but only the computer completed the selected pattern.";
+   cpuWinPending=false;
+  }
  }else{
   $("draw").disabled=false;$("headline").textContent="Number marked: "+value;$("message").textContent="Marked "+value+". Draw the next number when you're ready."
  }
- cpuWinPending=false;
  render();
 });
 $("newGame").addEventListener("click",newGame);

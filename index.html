@@ -247,7 +247,7 @@ function drawNext(){
   else if(p){$("headline").textContent="🏆 Bingo! You win!";$("message").textContent="Your card completed a line first.";}
   else{$("headline").textContent="🖥️ Computer wins!";$("message").textContent="The computer card completed a line first.";}
  }else if(drawBag.length===0){
-  over=true;$("draw").disabled=true;$("headline").textContent="No Bingo this game";$("message").textContent="All 75 numbers were drawn. Start a new game for fresh cards.";
+  $("draw").disabled=true;$("headline").textContent="All 75 numbers called";$("message").textContent="Tap the called numbers on your card to mark them and check your pattern.";
  }else{
   $("headline").textContent="Number called: "+n;$("message").textContent="Tap "+n+" if it appears on your card, then draw the next number.";
  }

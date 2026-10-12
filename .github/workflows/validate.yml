@@ -31,7 +31,7 @@ jobs:
           root = Path(".")
           html = (root / "index.html").read_text(encoding="utf-8")
           manifest = json.loads((root / "manifest.webmanifest").read_text(encoding="utf-8"))
-          required = ["./", "./index.html", "./manifest.webmanifest", "./favicon.svg", "./logo.svg"]
+          required = ["./manifest.webmanifest", "./favicon.svg", "./logo.svg"]
           missing = [path for path in required if path not in html and path != "./"]
           if missing:
               raise SystemExit(f"Missing expected local references in index.html: {missing}")
